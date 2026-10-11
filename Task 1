@@ -1,0 +1,250 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+
+import heroImg from "@/assets/pixel-hero.jpg";
+import natureImg from "@/assets/pixel-nature.jpg";
+import travelImg from "@/assets/pixel-travel.jpg";
+import architectureImg from "@/assets/pixel-architecture.jpg";
+import animalsImg from "@/assets/pixel-animals.jpg";
+import technologyImg from "@/assets/pixel-technology.jpg";
+import auroraImg from "@/assets/pixel-aurora.jpg";
+import foxImg from "@/assets/pixel-fox.jpg";
+
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Pixel Gallery — Explore the World Through Images" },
+      {
+        name: "description",
+        content:
+          "A night-studio contact sheet of fifteen frames: neon streets, blue-hour ridges, moonlit wildlife and glowing circuits.",
+      },
+      { property: "og:title", content: "Pixel Gallery — Explore the World Through Images" },
+      {
+        property: "og:description",
+        content:
+          "A night-studio contact sheet of fifteen frames: neon streets, blue-hour ridges, moonlit wildlife and glowing circuits.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap",
+      },
+    ],
+  }),
+  component: Index,
+});
+
+type Category = "Nature" | "Travel" | "Architecture" | "Animals" | "Technology";
+
+interface Frame {
+  id: number;
+  title: string;
+  location: string;
+  category: Category;
+  image: string;
+  alt: string;
+  featured?: boolean;
+}
+
+const FRAMES: Frame[] = [
+  { id: 1, title: "Blue Hour Ridge", location: "Dolomites", category: "Nature", image: natureImg, alt: "Misty alpine ridge at blue hour", featured: true },
+  { id: 2, title: "Cliffside Dusk", location: "Amalfi Coast", category: "Travel", image: travelImg, alt: "Coastal cliff path at a pink and violet dusk" },
+  { id: 3, title: "Concrete Bloom", location: "Tokyo", category: "Architecture", image: architectureImg, alt: "Brutalist concrete tower lit in pink" },
+  { id: 4, title: "Snowy Owl", location: "Lapland", category: "Animals", image: animalsImg, alt: "Snowy owl in cool blue moonlight" },
+  { id: 5, title: "Circuit Bloom", location: "Macro · 100mm", category: "Technology", image: technologyImg, alt: "Circuit board with glowing cyan and violet traces" },
+  { id: 6, title: "Fog Line", location: "Black Forest", category: "Nature", image: natureImg, alt: "Moonlight cutting through a deep blue forest" },
+  { id: 7, title: "Neon District", location: "After rain", category: "Architecture", image: heroImg, alt: "Neon city boulevard reflecting pink and blue light" },
+  { id: 8, title: "Moonlit Fox", location: "Hokkaido", category: "Animals", image: foxImg, alt: "Red fox standing in snow beneath a full moon" },
+  { id: 9, title: "Aurora Still", location: "Tromsø", category: "Nature", image: auroraImg, alt: "Violet and cyan aurora reflected in a dark lake" },
+  { id: 10, title: "Open Road", location: "Atacama", category: "Travel", image: travelImg, alt: "Desert road stretching toward a rose horizon" },
+  { id: 11, title: "Spiral Light", location: "Rotterdam", category: "Architecture", image: architectureImg, alt: "Spiral staircase glowing with cyan and violet light" },
+  { id: 12, title: "Hummingbird", location: "Costa Rica", category: "Animals", image: animalsImg, alt: "Hummingbird hovering beside violet flowers" },
+  { id: 13, title: "Signal Field", location: "Studio study", category: "Technology", image: technologyImg, alt: "Abstract close-up of a luminous circuit board" },
+  { id: 14, title: "Night Current", location: "City study", category: "Travel", image: heroImg, alt: "Rainy city traffic under neon lights" },
+  { id: 15, title: "Mountain Echo", location: "Blue hour", category: "Nature", image: natureImg, alt: "Layered mountains fading into blue mist" },
+];
+
+const CATEGORIES: Array<"All" | Category> = ["All", "Nature", "Travel", "Architecture", "Animals", "Technology"];
+
+function pad(n: number) {
+  return n.toString().padStart(2, "0");
+}
+
+function Index() {
+  const [active, setActive] = useState<(typeof CATEGORIES)[number]>("All");
+
+  const visible = useMemo(
+    () => (active === "All" ? FRAMES : FRAMES.filter((f) => f.category === active)),
+    [active],
+  );
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Header */}
+      <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <span className="font-mono-frame text-xs tracking-widest text-muted-foreground uppercase">
+            Night studio · contact sheet
+          </span>
+          <span className="font-display text-sm font-bold tracking-tight">
+            Pixel<span className="text-neon-pink">Gallery</span>
+          </span>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="mx-auto grid max-w-6xl gap-10 px-6 pt-16 pb-20 lg:grid-cols-2 lg:items-center">
+          <div className="animate-fade-up">
+            <h1 className="font-display text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl">
+              Explore the World Through{" "}
+              <span className="text-neon-pink text-glow-pink">Images</span>
+            </h1>
+            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
+              Discover beautiful moments, stunning landscapes, creative photography, and
+              unforgettable visuals — curated like a film editor's wall.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#gallery"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                Explore Gallery
+              </a>
+              <a
+                href="#categories"
+                className="inline-flex items-center justify-center rounded-md border border-border bg-secondary px-5 py-2.5 text-sm font-semibold text-secondary-foreground transition-colors hover:bg-accent"
+              >
+                View collections
+              </a>
+            </div>
+          </div>
+
+          <figure className="frame-card frame-card-hover animate-fade-up" style={{ animationDelay: "120ms" }}>
+            <img
+              src={heroImg}
+              alt="Neon city district at night with colorful reflections"
+              width={1600}
+              height={1008}
+              className="aspect-[16/10] w-full object-cover"
+            />
+            <div className="grain-overlay" />
+            <figcaption className="flex items-end justify-between gap-4 p-4">
+              <div>
+                <p className="font-mono-frame text-[10px] tracking-widest text-neon-cyan uppercase">
+                  Featured frame
+                </p>
+                <p className="font-display mt-1 text-lg font-bold">Neon District, 02:14</p>
+                <p className="font-mono-frame mt-1 text-xs text-muted-foreground">
+                  Architecture · 1/200s · f/1.8
+                </p>
+              </div>
+              <span className="font-mono-frame text-xs text-muted-foreground">01 / 15</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      {/* Gallery */}
+      <section id="gallery" className="mx-auto max-w-6xl px-6 pb-24">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="font-mono-frame text-xs tracking-widest text-neon-cyan uppercase">
+              The collection
+            </p>
+            <h2 className="font-display mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+              Fifteen frames, one night
+            </h2>
+          </div>
+          <nav id="categories" aria-label="Filter by category" className="flex flex-wrap gap-2">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActive(cat)}
+                className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors ${
+                  active === cat
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-secondary text-secondary-foreground hover:bg-accent"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {visible.map((frame, i) => (
+            <article
+              key={frame.id}
+              className="frame-card group animate-fade-up hover:frame-card-hover"
+              style={{ animationDelay: `${Math.min(i, 8) * 60}ms` }}
+            >
+              <div className="relative">
+                <img
+                  src={frame.image}
+                  alt={frame.alt}
+                  loading="lazy"
+                  width={1200}
+                  height={912}
+                  className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="grain-overlay" />
+                {frame.featured && (
+                  <span className="absolute top-3 left-3 rounded-full bg-primary px-3 py-1 text-[10px] font-semibold tracking-wide text-primary-foreground uppercase">
+                    Featured
+                  </span>
+                )}
+                <span className="font-mono-frame absolute right-3 bottom-3 rounded bg-background/70 px-2 py-0.5 text-[10px] text-foreground backdrop-blur-sm">
+                  {pad(frame.id)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3 p-4">
+                <div>
+                  <h3 className="font-display text-base font-bold">{frame.title}</h3>
+                  <p className="font-mono-frame mt-0.5 text-xs text-muted-foreground">
+                    {frame.category} · {frame.location}
+                  </p>
+                </div>
+                <span className="text-xs font-medium text-neon-cyan opacity-0 transition-opacity group-hover:opacity-100">
+                  View image →
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* About */}
+      <section className="border-t border-border bg-card">
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <p className="font-mono-frame text-xs tracking-widest text-neon-cyan uppercase">
+            About the collection
+          </p>
+          <p className="font-display mt-4 max-w-2xl text-2xl leading-snug font-bold tracking-tight">
+            Pixel Gallery is a colorful contact sheet for the details that make a place feel
+            alive — light on wet streets, fog between trees, and the quiet geometry of built
+            spaces.
+          </p>
+        </div>
+      </section>
+
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-6">
+          <span className="font-display text-sm font-bold">
+            Pixel<span className="text-neon-pink">Gallery</span>
+          </span>
+          <span className="font-mono-frame text-xs text-muted-foreground">
+            Night studio · 15 frames · shot between dusk and dawn
+          </span>
+        </div>
+      </footer>
+    </div>
+  );
+}
